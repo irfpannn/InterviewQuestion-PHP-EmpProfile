@@ -115,12 +115,6 @@ const EmployeeList: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">Employee List</h1>
           <p className="text-gray-600">Manage your organization's employees</p>
         </div>
-        <Link to="/employees/add">
-          <Button className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            Add Employee
-          </Button>
-        </Link>
       </div>
 
       {/* Filters */}
@@ -256,7 +250,7 @@ const EmployeeList: React.FC = () => {
               employees.map((employee) => (
                 <Card
                   key={employee.id}
-                  className="hover:shadow-lg transition-all duration-200"
+                  className="hover:shadow-lg transition-all duration-200 flex flex-col"
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
@@ -286,8 +280,8 @@ const EmployeeList: React.FC = () => {
                       </Badge>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2 mb-4">
+                  <CardContent className="flex flex-col flex-grow">
+                    <div className="space-y-2 flex-grow">
                       <div className="flex items-center text-sm text-gray-600">
                         <Mail className="h-4 w-4 mr-2" />
                         {employee.email}
@@ -301,7 +295,7 @@ const EmployeeList: React.FC = () => {
                         Joined {formatDate(employee.hireDate)}
                       </div>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center pt-4 mt-4 border-t">
                       <span className="text-lg font-semibold text-green-600">
                         MYR {employee.salary.toLocaleString()}
                       </span>

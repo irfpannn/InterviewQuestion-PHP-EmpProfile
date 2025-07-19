@@ -47,7 +47,7 @@ import { DEPARTMENTS } from "../constants";
 import type { Employee } from "../types/employee";
 
 const Dashboard: React.FC = () => {
-  const { employees, loading } = useEmployee();
+  const { allEmployees, loadingAll } = useEmployee();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
@@ -57,7 +57,7 @@ const Dashboard: React.FC = () => {
 
   // Filter employees based on search and department for the employees tab
   const filteredEmployees = useMemo(() => {
-    return employees.filter((emp) => {
+    return allEmployees.filter((emp) => {
       const matchesSearch =
         emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         emp.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -66,7 +66,7 @@ const Dashboard: React.FC = () => {
         !selectedDepartment || emp.department === selectedDepartment;
       return matchesSearch && matchesDepartment;
     });
-  }, [employees, searchTerm, selectedDepartment]);
+  }, [allEmployees, searchTerm, selectedDepartment]);
 
   // Calculate dashboard metrics
   const dashboardMetrics = useMemo(() => {
@@ -75,7 +75,7 @@ const Dashboard: React.FC = () => {
     const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
 
     // Use all employees (the API should already filter out deleted ones)
-    const activeEmployees = employees;
+    const activeEmployees = allEmployees;
 
     const totalEmployees = activeEmployees.length;
     const newEmployeesThisMonth = activeEmployees.filter(
@@ -182,7 +182,7 @@ const Dashboard: React.FC = () => {
       averageTenureInYears,
       hiringGoals,
     };
-  }, [employees]);
+  }, [allEmployees]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -219,7 +219,7 @@ const Dashboard: React.FC = () => {
     setSelectedEmployee(null);
   };
 
-  if (loading) {
+  if (loadingAll) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
@@ -398,7 +398,10 @@ const Dashboard: React.FC = () => {
                           <div className="text-sm font-medium text-gray-900">
                             {formatDate(employee.hireDate)}
                           </div>
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge
+                            department={employee.department}
+                            className="text-xs"
+                          >
                             {
                               DEPARTMENTS.find(
                                 (d) => d.value === employee.department
@@ -713,7 +716,7 @@ const Dashboard: React.FC = () => {
               <div className="text-center">
                 <Link to="/employees">
                   <Button variant="outline">
-                    View All Employees ({employees.length})
+                    View All Employees ({allEmployees.length})
                   </Button>
                 </Link>
               </div>

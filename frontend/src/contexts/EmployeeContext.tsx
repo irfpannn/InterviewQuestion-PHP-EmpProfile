@@ -8,7 +8,9 @@ import { ITEMS_PER_PAGE } from "../constants";
 
 interface EmployeeContextType {
   employees: Employee[];
+  allEmployees: Employee[];
   loading: boolean;
+  loadingAll: boolean;
   error: string | null;
   totalPages: number;
   currentPage: number;
@@ -71,6 +73,13 @@ export const EmployeeProvider: React.FC<EmployeeProviderProps> = ({
         sort_by: filters.sortBy,
         sort_direction: filters.sortOrder,
       }),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 10, // 10 minutes
+  });
+
+  const { data: allEmployeesData, isLoading: loadingAll } = useQuery({
+    queryKey: ["employees", "all"],
+    queryFn: () => employeeApi.getEmployees({ per_page: 9999 }), // Fetch all employees
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes
   });
@@ -147,7 +156,9 @@ export const EmployeeProvider: React.FC<EmployeeProviderProps> = ({
 
   const contextValue: EmployeeContextType = {
     employees: employeeData?.data?.data || [],
+    allEmployees: allEmployeesData?.data?.data || [],
     loading,
+    loadingAll,
     error: error ? "Failed to load employees" : null,
     totalPages: employeeData?.data?.meta?.last_page || 1,
     currentPage,

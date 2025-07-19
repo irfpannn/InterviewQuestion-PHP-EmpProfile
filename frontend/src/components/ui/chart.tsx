@@ -31,28 +31,27 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
           style={{ height }}
           {...props}
         >
-          <div className="flex h-full items-end justify-between gap-1 pb-12">
+          <div className="flex h-full items-end justify-center gap-8 pb-12">
             {data.map((item, index) => (
               <div
                 key={item.label}
-                className="flex flex-col items-center flex-1 h-full max-w-20"
+                className="flex flex-col items-center w-24 h-full"
               >
                 <div className="flex flex-col items-center justify-end h-full w-full">
                   <div className="text-xs font-medium text-gray-900 mb-1">
                     {item.value}
                   </div>
                   <div
-                    className="w-full rounded-t-md transition-all duration-300 hover:opacity-80"
+                    className="w-20 rounded-t-md transition-all duration-300 hover:opacity-80"
                     style={{
                       height: `${Math.max((item.value / maxValue) * 70, 4)}%`,
                       backgroundColor:
                         item.color || colors[index % colors.length],
                       minHeight: "4px",
-                      minWidth: "24px",
                     }}
                   />
                 </div>
-                <div className="mt-2 text-xs text-gray-600 text-center break-words w-full">
+                <div className="mt-2 text-xs text-gray-600 text-center w-24">
                   {item.label}
                 </div>
               </div>
