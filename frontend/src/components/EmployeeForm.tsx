@@ -1,18 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Upload, X, User } from "lucide-react";
+import { Upload, X, User, Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Card, CardContent } from "./ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
+import { Calendar } from "./ui/calendar";
 import { cn } from "../lib/utils";
 import { employeeFormSchema } from "../lib/schemas";
 import {
@@ -30,6 +25,97 @@ interface EmployeeFormProps {
   isLoading?: boolean;
   submitLabel?: string;
 }
+
+// Date Picker Component
+interface DatePickerProps {
+  value?: string;
+  onChange: (date: string) => void;
+  placeholder?: string;
+  disabled?: boolean;
+  className?: string;
+}
+
+const DatePicker: React.FC<DatePickerProps> = ({
+  value,
+  onChange,
+  placeholder = "Pick a date",
+  disabled = false,
+  className,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    value ? new Date(value) : undefined
+  );
+  const datePickerRef = useRef<HTMLDivElement>(null);
+
+  // Update selected date when value changes
+  useEffect(() => {
+    setSelectedDate(value ? new Date(value) : undefined);
+  }, [value]);
+
+  // Close calendar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        datePickerRef.current &&
+        !datePickerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleDateSelect = (date: Date | undefined) => {
+    if (date) {
+      setSelectedDate(date);
+      onChange(date.toISOString().split("T")[0]); // Format as YYYY-MM-DD
+      setIsOpen(false);
+    }
+  };
+
+  return (
+    <div className="relative" ref={datePickerRef}>
+      <Button
+        type="button"
+        variant="outline"
+        className={cn(
+          "w-full justify-start text-left font-normal",
+          !selectedDate && "text-muted-foreground",
+          className
+        )}
+        onClick={() => setIsOpen(!isOpen)}
+        disabled={disabled}
+      >
+        <CalendarIcon className="mr-2 h-4 w-4" />
+        {selectedDate ? (
+          selectedDate.toLocaleDateString()
+        ) : (
+          <span>{placeholder}</span>
+        )}
+      </Button>
+      {isOpen && (
+        <div className="absolute z-50 mt-1 rounded-md border bg-popover p-0 shadow-md">
+          <Calendar
+            mode="single"
+            selected={selectedDate}
+            onSelect={handleDateSelect}
+            captionLayout="dropdown"
+            initialFocus
+            className="rounded-lg border shadow-sm"
+          />
+        </div>
+      )}
+    </div>
+  );
+};
 
 const EmployeeForm: React.FC<EmployeeFormProps> = ({
   initialData,
@@ -258,7 +344,13 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
                 <SelectTrigger
                   className={cn(errors.gender && "border-red-500")}
                 >
-                  <SelectValue placeholder="Select Gender" />
+                  <span className="flex-1 text-left">
+                    {watch("gender")
+                      ? GENDER_OPTIONS.find(
+                          (option) => option.value === watch("gender")
+                        )?.label
+                      : "Select Gender"}
+                  </span>
                 </SelectTrigger>
                 <SelectContent>
                   {GENDER_OPTIONS.map((option) => (
@@ -288,7 +380,13 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
                 <SelectTrigger
                   className={cn(errors.marital_status && "border-red-500")}
                 >
-                  <SelectValue placeholder="Select Marital Status" />
+                  <span className="flex-1 text-left">
+                    {watch("marital_status")
+                      ? MARITAL_STATUS_OPTIONS.find(
+                          (option) => option.value === watch("marital_status")
+                        )?.label
+                      : "Select Marital Status"}
+                  </span>
                 </SelectTrigger>
                 <SelectContent>
                   {MARITAL_STATUS_OPTIONS.map((option) => (
@@ -313,7 +411,13 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
                 <SelectTrigger
                   className={cn(errors.nationality && "border-red-500")}
                 >
-                  <SelectValue placeholder="Select Nationality" />
+                  <span className="flex-1 text-left">
+                    {watch("nationality")
+                      ? NATIONALITY_OPTIONS.find(
+                          (option) => option.value === watch("nationality")
+                        )?.label
+                      : "Select Nationality"}
+                  </span>
                 </SelectTrigger>
                 <SelectContent>
                   {NATIONALITY_OPTIONS.map((option) => (
@@ -331,10 +435,10 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
             </div>
             <div>
               <Label htmlFor="date_of_birth">Date of Birth *</Label>
-              <Input
-                id="date_of_birth"
-                type="date"
-                {...register("date_of_birth")}
+              <DatePicker
+                value={watch("date_of_birth")}
+                onChange={(date) => setValue("date_of_birth", date)}
+                placeholder="Select date of birth"
                 className={cn(errors.date_of_birth && "border-red-500")}
               />
               {errors.date_of_birth && (
@@ -374,7 +478,13 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
                 <SelectTrigger
                   className={cn(errors.department && "border-red-500")}
                 >
-                  <SelectValue placeholder="Select Department" />
+                  <span className="flex-1 text-left">
+                    {watch("department")
+                      ? DEPARTMENTS.find(
+                          (dept) => dept.value === watch("department")
+                        )?.label
+                      : "Select Department"}
+                  </span>
                 </SelectTrigger>
                 <SelectContent>
                   {DEPARTMENTS.map((dept) => (
@@ -421,10 +531,10 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
             </div>
             <div>
               <Label htmlFor="hire_date">Hire Date *</Label>
-              <Input
-                id="hire_date"
-                type="date"
-                {...register("hire_date")}
+              <DatePicker
+                value={watch("hire_date")}
+                onChange={(date) => setValue("hire_date", date)}
+                placeholder="Select hire date"
                 className={cn(errors.hire_date && "border-red-500")}
               />
               {errors.hire_date && (

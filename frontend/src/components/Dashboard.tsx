@@ -35,13 +35,7 @@ import { Progress } from "./ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Chart } from "./ui/chart";
 import { Input } from "./ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
 import {
   Dialog,
   DialogContent,
@@ -234,7 +228,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-hidden">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
@@ -316,385 +310,305 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="employees">Employees</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-        </TabsList>
+      <div className="w-full">
+        <Tabs defaultValue="overview" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="employees">Employees</TabsTrigger>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Department Distribution */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Building className="h-5 w-5" />
-                  Department Distribution
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Chart
-                  data={dashboardMetrics.departmentCounts}
-                  type="doughnut"
-                  height={250}
-                />
-              </CardContent>
-            </Card>
-
-            {/* Salary Distribution */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5" />
-                  Salary Distribution
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Chart
-                  data={dashboardMetrics.salaryDistribution}
-                  type="bar"
-                  height={250}
-                />
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Recent Activity */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Recent Hires */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="h-5 w-5" />
-                  Recent Hires
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {dashboardMetrics.recentHires.map((employee) => (
-                    <div
-                      key={employee.id}
-                      className="flex items-center justify-between p-3 rounded-lg border border-gray-100"
-                    >
-                      <div className="flex items-center gap-3">
-                        {getProfilePhotoUrl(employee) ? (
-                          <img
-                            src={getProfilePhotoUrl(employee)!}
-                            alt={employee.name}
-                            className="h-10 w-10 rounded-full object-cover"
-                          />
-                        ) : (
-                          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                            <Users className="h-5 w-5 text-gray-400" />
-                          </div>
-                        )}
-                        <div>
-                          <div className="font-medium text-gray-900">
-                            {employee.name}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {employee.jobTitle}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-sm font-medium text-gray-900">
-                          {formatDate(employee.hireDate)}
-                        </div>
-                        <Badge variant="secondary" className="text-xs">
-                          {
-                            DEPARTMENTS.find(
-                              (d) => d.value === employee.department
-                            )?.label
-                          }
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Top Earners */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Award className="h-5 w-5" />
-                  Top Earners
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {dashboardMetrics.topEarners.map((employee, index) => (
-                    <div
-                      key={employee.id}
-                      className="flex items-center justify-between p-3 rounded-lg border border-gray-100"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-sm font-semibold">
-                          {index + 1}
-                        </div>
-                        {getProfilePhotoUrl(employee) ? (
-                          <img
-                            src={getProfilePhotoUrl(employee)!}
-                            alt={employee.name}
-                            className="h-10 w-10 rounded-full object-cover"
-                          />
-                        ) : (
-                          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                            <Users className="h-5 w-5 text-gray-400" />
-                          </div>
-                        )}
-                        <div>
-                          <div className="font-medium text-gray-900">
-                            {employee.name}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {employee.jobTitle}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-sm font-medium text-green-600">
-                          {formatCurrency(employee.salary)}
-                        </div>
-                        <Badge variant="secondary" className="text-xs">
-                          {
-                            DEPARTMENTS.find(
-                              (d) => d.value === employee.department
-                            )?.label
-                          }
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="analytics" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Target className="h-5 w-5" />
-                  Department Goals
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {dashboardMetrics.hiringGoals.slice(0, 3).map((goal) => (
-                    <div key={goal.department}>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span>{goal.department}</span>
-                        <span>
-                          {goal.current}/{goal.target}
-                        </span>
-                      </div>
-                      <Progress value={goal.progress} className="h-2" />
-                    </div>
-                  ))}
-                  {dashboardMetrics.hiringGoals.length === 0 && (
-                    <p className="text-sm text-gray-500">
-                      No departments with employees yet
-                    </p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Activity className="h-5 w-5" />
-                  Team Growth
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-green-600 mb-2">
-                    {dashboardMetrics.growthPercentage.toFixed(1)}%
-                  </div>
-                  <div className="text-sm text-gray-600 mb-4">
-                    Monthly growth rate
-                  </div>
-                  <Progress
-                    value={Math.min(
-                      Math.abs(dashboardMetrics.growthPercentage),
-                      100
-                    )}
-                    className="h-2"
-                  />
-                  <div className="text-xs text-gray-500 mt-2">
-                    {dashboardMetrics.newEmployeesThisMonth} new hires this
-                    month
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Calendar className="h-5 w-5" />
-                  Team Stats
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Active Employees</span>
-                    <Badge variant="secondary">
-                      {dashboardMetrics.totalEmployees}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">New This Month</span>
-                    <Badge variant="secondary">
-                      {dashboardMetrics.newEmployeesThisMonth}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Avg Tenure</span>
-                    <Badge variant="secondary">
-                      {dashboardMetrics.averageTenureInYears} years
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Departments</span>
-                    <Badge variant="secondary">
-                      {dashboardMetrics.departmentCounts.length}
-                    </Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="employees" className="space-y-6">
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="Search employees..."
-                  className="pl-10 w-64"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <Select
-                value={selectedDepartment}
-                onValueChange={setSelectedDepartment}
-              >
-                <SelectTrigger className="w-40">
-                  <SelectValue placeholder="Department" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">All Departments</SelectItem>
-                  {DEPARTMENTS.map((dept) => (
-                    <SelectItem key={dept.value} value={dept.value}>
-                      {dept.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <Link to="/employees/add">
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Employee
-              </Button>
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredEmployees.slice(0, 9).map((employee) => (
-              <Card
-                key={employee.id}
-                className="hover:shadow-lg transition-shadow"
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex items-center gap-3">
-                    {getProfilePhotoUrl(employee) ? (
-                      <img
-                        src={getProfilePhotoUrl(employee)!}
-                        alt={employee.name}
-                        className="h-12 w-12 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center">
-                        <Users className="h-6 w-6 text-gray-400" />
-                      </div>
-                    )}
-                    <div>
-                      <div className="font-semibold text-gray-900">
-                        {employee.name}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {employee.jobTitle}
-                      </div>
-                    </div>
-                  </div>
+          <TabsContent value="overview" className="space-y-6 min-h-[800px]">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Department Distribution */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Building className="h-5 w-5" />
+                    Department Distribution
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Mail className="h-4 w-4 mr-2" />
-                      {employee.email}
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Phone className="h-4 w-4 mr-2" />
-                      {employee.phoneNo}
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Briefcase className="h-4 w-4 mr-2" />
-                      {
-                        DEPARTMENTS.find((d) => d.value === employee.department)
-                          ?.label
-                      }
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="text-lg font-semibold text-green-600">
-                      {formatCurrency(employee.salary)}
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleViewEmployee(employee)}
+                  <Chart
+                    data={dashboardMetrics.departmentCounts}
+                    type="doughnut"
+                    height={250}
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Salary Distribution */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="h-5 w-5" />
+                    Salary Distribution
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Chart
+                    data={dashboardMetrics.salaryDistribution}
+                    type="bar"
+                    height={250}
+                  />
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Recent Activity */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Recent Hires */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Clock className="h-5 w-5" />
+                    Recent Hires
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {dashboardMetrics.recentHires.map((employee) => (
+                      <div
+                        key={employee.id}
+                        className="flex items-center justify-between p-3 rounded-lg border border-gray-100"
                       >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Link to={`/employees/${employee.id}/edit`}>
-                        <Button variant="outline" size="sm">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                      </Link>
+                        <div className="flex items-center gap-3">
+                          {getProfilePhotoUrl(employee) ? (
+                            <img
+                              src={getProfilePhotoUrl(employee)!}
+                              alt={employee.name}
+                              className="h-10 w-10 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                              <Users className="h-5 w-5 text-gray-400" />
+                            </div>
+                          )}
+                          <div>
+                            <div className="font-medium text-gray-900">
+                              {employee.name}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {employee.jobTitle}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm font-medium text-gray-900">
+                            {formatDate(employee.hireDate)}
+                          </div>
+                          <Badge variant="secondary" className="text-xs">
+                            {
+                              DEPARTMENTS.find(
+                                (d) => d.value === employee.department
+                              )?.label
+                            }
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Top Earners */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Award className="h-5 w-5" />
+                    Top Earners
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {dashboardMetrics.topEarners.map((employee, index) => (
+                      <div
+                        key={employee.id}
+                        className="flex items-center justify-between p-3 rounded-lg border border-gray-100"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-sm font-semibold">
+                            {index + 1}
+                          </div>
+                          {getProfilePhotoUrl(employee) ? (
+                            <img
+                              src={getProfilePhotoUrl(employee)!}
+                              alt={employee.name}
+                              className="h-10 w-10 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                              <Users className="h-5 w-5 text-gray-400" />
+                            </div>
+                          )}
+                          <div>
+                            <div className="font-medium text-gray-900">
+                              {employee.name}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {employee.jobTitle}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm font-medium text-green-600">
+                            {formatCurrency(employee.salary)}
+                          </div>
+                          <Badge
+                            department={employee.department}
+                            className="text-xs"
+                          >
+                            {
+                              DEPARTMENTS.find(
+                                (d) => d.value === employee.department
+                              )?.label
+                            }
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="analytics" className="space-y-6 min-h-[800px]">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Target className="h-5 w-5" />
+                    Department Goals
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {dashboardMetrics.hiringGoals.slice(0, 3).map((goal) => (
+                      <div key={goal.department}>
+                        <div className="flex justify-between text-sm mb-2">
+                          <span>{goal.department}</span>
+                          <span>
+                            {goal.current}/{goal.target}
+                          </span>
+                        </div>
+                        <Progress value={goal.progress} className="h-2" />
+                      </div>
+                    ))}
+                    {dashboardMetrics.hiringGoals.length === 0 && (
+                      <p className="text-sm text-gray-500">
+                        No departments with employees yet
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Activity className="h-5 w-5" />
+                    Team Growth
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-green-600 mb-2">
+                      {dashboardMetrics.growthPercentage.toFixed(1)}%
+                    </div>
+                    <div className="text-sm text-gray-600 mb-4">
+                      Monthly growth rate
+                    </div>
+                    <Progress
+                      value={Math.min(
+                        Math.abs(dashboardMetrics.growthPercentage),
+                        100
+                      )}
+                      className="h-2"
+                    />
+                    <div className="text-xs text-gray-500 mt-2">
+                      {dashboardMetrics.newEmployeesThisMonth} new hires this
+                      month
                     </div>
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
 
-          {filteredEmployees.length === 0 && (
-            <div className="text-center py-12">
-              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No employees found
-              </h3>
-              <p className="text-gray-500 mb-6">
-                {searchTerm || selectedDepartment
-                  ? "Try adjusting your search or filter criteria."
-                  : "Get started by adding your first employee."}
-              </p>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    Team Stats
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Active Employees</span>
+                      <Badge variant="secondary">
+                        {dashboardMetrics.totalEmployees}
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">New This Month</span>
+                      <Badge variant="secondary">
+                        {dashboardMetrics.newEmployeesThisMonth}
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Avg Tenure</span>
+                      <Badge variant="secondary">
+                        {dashboardMetrics.averageTenureInYears} years
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Departments</span>
+                      <Badge variant="secondary">
+                        {dashboardMetrics.departmentCounts.length}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="employees" className="space-y-6 min-h-[800px]">
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Search employees..."
+                    className="pl-10 w-64"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+                <Select
+                  value={selectedDepartment}
+                  onValueChange={setSelectedDepartment}
+                >
+                  <SelectTrigger className="w-40">
+                    <span className="flex-1 text-left">
+                      {selectedDepartment
+                        ? DEPARTMENTS.find(
+                            (dept) => dept.value === selectedDepartment
+                          )?.label
+                        : "All Departments"}
+                    </span>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">All Departments</SelectItem>
+                    {DEPARTMENTS.map((dept) => (
+                      <SelectItem key={dept.value} value={dept.value}>
+                        {dept.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <Link to="/employees/add">
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
@@ -702,63 +616,155 @@ const Dashboard: React.FC = () => {
                 </Button>
               </Link>
             </div>
-          )}
 
-          {filteredEmployees.length > 0 && (
-            <div className="text-center">
-              <Link to="/employees">
-                <Button variant="outline">
-                  View All Employees ({employees.length})
-                </Button>
-              </Link>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredEmployees.slice(0, 9).map((employee) => (
+                <Card
+                  key={employee.id}
+                  className="hover:shadow-lg transition-shadow"
+                >
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3">
+                      {getProfilePhotoUrl(employee) ? (
+                        <img
+                          src={getProfilePhotoUrl(employee)!}
+                          alt={employee.name}
+                          className="h-12 w-12 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center">
+                          <Users className="h-6 w-6 text-gray-400" />
+                        </div>
+                      )}
+                      <div>
+                        <div className="font-semibold text-gray-900">
+                          {employee.name}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {employee.jobTitle}
+                        </div>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Mail className="h-4 w-4 mr-2" />
+                        {employee.email}
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Phone className="h-4 w-4 mr-2" />
+                        {employee.phoneNo}
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Briefcase className="h-4 w-4 mr-2" />
+                        {
+                          DEPARTMENTS.find(
+                            (d) => d.value === employee.department
+                          )?.label
+                        }
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="text-lg font-semibold text-green-600">
+                        {formatCurrency(employee.salary)}
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleViewEmployee(employee)}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Link to={`/employees/${employee.id}/edit`}>
+                          <Button variant="outline" size="sm">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-          )}
-        </TabsContent>
 
-        <TabsContent value="reports" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Stats</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Total Employees</span>
-                    <span className="font-semibold">
-                      {dashboardMetrics.totalEmployees}
-                    </span>
+            {filteredEmployees.length === 0 && (
+              <div className="text-center py-12">
+                <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No employees found
+                </h3>
+                <p className="text-gray-500 mb-6">
+                  {searchTerm || selectedDepartment
+                    ? "Try adjusting your search or filter criteria."
+                    : "Get started by adding your first employee."}
+                </p>
+                <Link to="/employees/add">
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Employee
+                  </Button>
+                </Link>
+              </div>
+            )}
+
+            {filteredEmployees.length > 0 && (
+              <div className="text-center">
+                <Link to="/employees">
+                  <Button variant="outline">
+                    View All Employees ({employees.length})
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="reports" className="space-y-6 min-h-[800px]">
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Quick Stats</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Total Employees</span>
+                      <span className="font-semibold">
+                        {dashboardMetrics.totalEmployees}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Average Tenure</span>
+                      <span className="font-semibold">
+                        {dashboardMetrics.averageTenureInYears} years
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Active Departments</span>
+                      <span className="font-semibold">
+                        {dashboardMetrics.departmentCounts.length}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">New Hires (Month)</span>
+                      <span className="font-semibold">
+                        {dashboardMetrics.newEmployeesThisMonth}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Total Payroll</span>
+                      <span className="font-semibold">
+                        {formatCurrency(dashboardMetrics.totalPayroll)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Average Tenure</span>
-                    <span className="font-semibold">
-                      {dashboardMetrics.averageTenureInYears} years
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Active Departments</span>
-                    <span className="font-semibold">
-                      {dashboardMetrics.departmentCounts.length}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">New Hires (Month)</span>
-                    <span className="font-semibold">
-                      {dashboardMetrics.newEmployeesThisMonth}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Total Payroll</span>
-                    <span className="font-semibold">
-                      {formatCurrency(dashboardMetrics.totalPayroll)}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
 
       {/* Employee Details Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -788,7 +794,10 @@ const Dashboard: React.FC = () => {
                     {selectedEmployee.name}
                   </h3>
                   <p className="text-gray-600">{selectedEmployee.jobTitle}</p>
-                  <Badge variant="secondary" className="mt-1">
+                  <Badge
+                    department={selectedEmployee.department}
+                    className="mt-1"
+                  >
                     {
                       DEPARTMENTS.find(
                         (d) => d.value === selectedEmployee.department
@@ -952,5 +961,4 @@ const Dashboard: React.FC = () => {
     </div>
   );
 };
-
 export default Dashboard;

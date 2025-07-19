@@ -17,13 +17,7 @@ import { useEmployee } from "../contexts/EmployeeContext";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { cn } from "../lib/utils";
@@ -159,7 +153,13 @@ const EmployeeList: React.FC = () => {
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="All Departments" />
+                  <span className="flex-1 text-left">
+                    {filters.department
+                      ? DEPARTMENTS.find(
+                          (dept) => dept.value === filters.department
+                        )?.label
+                      : "All Departments"}
+                  </span>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="">All Departments</SelectItem>
@@ -173,7 +173,7 @@ const EmployeeList: React.FC = () => {
             </div>
             <div className="flex gap-2">
               <Button
-                variant={isGridView ? "outline" : "primary"}
+                variant={isGridView ? "outline" : "default"}
                 size="sm"
                 onClick={() => setIsGridView(false)}
               >
@@ -181,7 +181,7 @@ const EmployeeList: React.FC = () => {
                 Table
               </Button>
               <Button
-                variant={isGridView ? "primary" : "outline"}
+                variant={isGridView ? "default" : "outline"}
                 size="sm"
                 onClick={() => setIsGridView(true)}
               >
@@ -281,7 +281,7 @@ const EmployeeList: React.FC = () => {
                           </p>
                         </div>
                       </div>
-                      <Badge variant="secondary">
+                      <Badge department={employee.department}>
                         {getDepartmentLabel(employee.department)}
                       </Badge>
                     </div>
@@ -461,7 +461,7 @@ const EmployeeList: React.FC = () => {
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <Badge variant="secondary">
+                            <Badge department={employee.department}>
                               {getDepartmentLabel(employee.department)}
                             </Badge>
                           </td>
@@ -519,7 +519,7 @@ const EmployeeList: React.FC = () => {
                 (page) => (
                   <Button
                     key={page}
-                    variant={currentPage === page ? "primary" : "outline"}
+                    variant={currentPage === page ? "default" : "outline"}
                     size="sm"
                     onClick={() => setCurrentPage(page)}
                   >

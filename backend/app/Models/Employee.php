@@ -41,7 +41,9 @@ class Employee
         }
         
         $this->gender = $data['gender'] ?? 'other';
-        $this->maritalStatus = $data['maritalStatus'] ?? 'single';
+        
+        // Handle marital status field - support both underscore and camelCase
+        $this->maritalStatus = $data['marital_status'] ?? $data['maritalStatus'] ?? 'single';
         
         // Handle phone field - support both phone and phoneNo
         $this->phoneNo = $data['phone'] ?? $data['phoneNo'] ?? '';
@@ -55,8 +57,10 @@ class Employee
         
         $this->nationality = $data['nationality'] ?? 'American';
         $this->department = $data['department'] ?? '';
-        $this->emergencyContactName = $data['emergencyContactName'] ?? '';
-        $this->emergencyContactPhone = $data['emergencyContactPhone'] ?? '';
+        
+        // Handle emergency contact fields - support both underscore and camelCase
+        $this->emergencyContactName = $data['emergency_contact_name'] ?? $data['emergencyContactName'] ?? '';
+        $this->emergencyContactPhone = $data['emergency_contact_phone'] ?? $data['emergencyContactPhone'] ?? '';
         
         // Handle job title field - support both position and jobTitle
         $this->jobTitle = $data['position'] ?? $data['jobTitle'] ?? '';
