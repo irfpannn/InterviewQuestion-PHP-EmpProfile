@@ -4,6 +4,14 @@
 
 A feature-complete Employee Management mini-app built with React 18, TypeScript, Laravel 11, and modern development practices.
 
+## 📸 Screenshots
+
+![Employee Form](screenshots/Screenshot%202025-07-21%20171016.png)
+_Employee Form View_
+
+![Add Employee Form Validation](screenshots/Screenshot%202025-07-21%20171019.png)
+_Employee Form Validation_
+
 ## 🚀 Quick Start
 
 ```bash
