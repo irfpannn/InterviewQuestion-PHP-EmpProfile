@@ -58,7 +58,7 @@ clean:
 # Setup environment
 setup:
 	@echo "⚙️  Setting up environment..."
-	@if not exist backend\.env copy backend\.env.example backend\.env
+	@powershell -Command "if (!(Test-Path 'backend\\.env')) { Copy-Item 'backend\\.env.example' 'backend\\.env' }"
 	@echo "✅ Environment setup completed!"
 
 # Full setup (install + setup)
