@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Users, Plus, Menu, X, Home } from "lucide-react";
 import { Button } from "./ui/button";
@@ -10,7 +10,23 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [scrolled]);
 
   const navigation = [
     { name: "Dashboard", href: "/", icon: Home },
@@ -25,11 +41,21 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-16">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header
+        className={cn(
+          "fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 transition-all duration-300 ease-in-out animate-slide-down",
+          scrolled ? "shadow-md bg-white/95 backdrop-blur-sm" : "shadow-sm"
+        )}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div
+            className={cn(
+              "flex justify-between items-center transition-all duration-300",
+              scrolled ? "h-14 animate-shrink-header" : "h-16"
+            )}
+          >
             {/* Logo */}
             <div className="flex items-center">
               <Link to="/" className="flex items-center space-x-3">
@@ -80,8 +106,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <div className="md:hidden border-t border-gray-200 bg-white">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 animate-fadeIn">
               {navigation.map((item) => {
                 const Icon = item.icon;
                 return (

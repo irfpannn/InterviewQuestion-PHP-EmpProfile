@@ -36,6 +36,14 @@ export const employeeFormSchema = z.object({
   emergency_contact_name: z.string().optional(),
   emergency_contact_phone: z.string().optional(),
   profile_photo: z.instanceof(File).optional(),
+}).refine((data) => {
+    if (data.hire_date && data.date_of_birth) {
+        return new Date(data.hire_date) > new Date(data.date_of_birth);
+    }
+    return true;
+}, {
+  message: "Hire date must be after date of birth",
+  path: ["hire_date"],
 });
 
 export const employeeFilterSchema = z.object({

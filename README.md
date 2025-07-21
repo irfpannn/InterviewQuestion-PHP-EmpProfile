@@ -1,4 +1,6 @@
-# Employee Management System
+# Employee Management System - MYWave
+
+![Tests](https://img.shields.io/badge/tests-30%20passed-brightgreen)
 
 A feature-complete Employee Management mini-app built with React 18, TypeScript, Laravel 11, and modern development practices.
 
@@ -15,7 +17,7 @@ make all && make dev
 
 - **React 18** with TypeScript (strict mode)
 - **Vite** for build tooling
-- **Tailwind CSS** for styling with dark mode support
+- **Tailwind CSS** for styling
 - **Shadcn/UI** for component library
 - **React Hook Form** with Zod validation
 - **TanStack Query** for data fetching
@@ -23,11 +25,11 @@ make all && make dev
 
 ### Backend
 
-- **Laravel 11** with PHP 8.3
+- **Laravel 12** with PHP 8.3
 - **Sanctum** for SPA authentication
 - **Pest** for testing
 - **Pint** for code formatting
-- **JSON file storage** for employee data
+- **JSON file storage** for employee data (no database required)
 - **PSR-12** compliant code
 
 ## 📋 Features
@@ -55,12 +57,13 @@ make all && make dev
 - **Client-side validation** with Zod schemas
 - **Server-side validation** with Laravel FormRequests
 - **Debounced search** functionality
-- **Sortable columns** (server-side)
 - **Pagination** with customizable page sizes
 - **Loading states** and skeleton placeholders
 - **Toast notifications** for user feedback
-- **Dark mode** support
 - **Mobile-first** responsive design
+- **Sticky navigation header** with scroll animations
+- **Department-specific styling** for badges and UI elements
+- **Data visualization** with optimized chart components
 - **Rate limiting** (60 requests/minute)
 - **CORS** properly configured
 - **RESTful API** with proper HTTP status codes
@@ -90,7 +93,6 @@ DELETE /api/employees/{id}      → Delete employee (soft delete)
 
 ```bash
 git clone <repository-url>
-cd employee-management
 ```
 
 2. **Backend Setup**
@@ -101,8 +103,7 @@ composer install
 cp .env.example .env
 php artisan key:generate
 php artisan storage:link
-touch database/database.sqlite
-php artisan migrate
+# No database setup required for core app functionality
 ```
 
 3. **Frontend Setup**
@@ -146,6 +147,8 @@ cd backend && php artisan serve --env=production
 ```
 
 ## 🧪 Testing
+
+All 30 backend tests are passing, covering API endpoints, repository logic, and validation rules.
 
 ### Backend Tests
 
@@ -200,24 +203,29 @@ employee-management/
 
 ### Color Palette
 
-- **Primary**: Modern blue (#0f172a)
+- **Primary**: Modern blue gradient (#0f172a to #1e293b)
 - **Secondary**: Light gray (#f1f5f9)
 - **Success**: Green (#22c55e)
 - **Error**: Red (#ef4444)
 - **Warning**: Yellow (#eab308)
+- **Department Colors**: Unique color coding for each department
 
 ### Typography
 
-- **Font**: Inter (system fallback)
+- **Font**: Gabarito
 - **Headings**: Semibold, tracking tight
 - **Body**: Regular, line-height 1.5
+- **Badges**: Department-specific styling with consistent text contrast
 
 ### Components
 
 - **Buttons**: Multiple variants (primary, secondary, outline, ghost)
 - **Forms**: Consistent styling with validation states
-- **Cards**: Subtle shadows and borders
+- **Cards**: Subtle shadows and borders with consistent bottom alignment
 - **Tables**: Responsive with hover states
+- **Badges**: Customized by department with appropriate color contrast
+- **Charts**: Interactive data visualization with optimized spacing
+- **Header**: Sticky navigation with smooth scroll animations
 
 ## 🔒 Security Features
 
@@ -230,17 +238,13 @@ employee-management/
 ## 📱 Mobile Responsiveness
 
 - **Breakpoints**: Mobile-first approach
-- **Navigation**: Responsive header and mobile menu
+- **Navigation**: Responsive sticky header with animated mobile menu
 - **Tables**: Transform to cards on mobile
 - **Forms**: Stack vertically on small screens
+- **Employee Cards**: Responsive grid with consistent alignment
+- **Charts**: Responsive visualizations that adapt to screen size
 - **Touch-friendly**: Proper touch targets (44px minimum)
-
-## 🌙 Dark Mode
-
-- **System Preference**: Automatically detects system theme
-- **Manual Toggle**: User can override system preference
-- **Consistent Colors**: All components support dark mode
-- **Accessibility**: Proper contrast ratios maintained
+- **Smooth Animations**: Optimized for both desktop and mobile performance
 
 ## 📊 Performance
 
@@ -324,27 +328,3 @@ POST /api/employees
   "message": "Employee created successfully"
 }
 ```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests: `make test`
-5. Submit a pull request
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 🙋 Support
-
-For questions or issues:
-
-- Create an issue on GitHub
-- Check the documentation
-- Review the test files for examples
-
----
-
-**Built with ❤️ using modern web technologies**

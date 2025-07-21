@@ -584,7 +584,7 @@ const Dashboard: React.FC = () => {
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
                     placeholder="Search employees..."
-                    className="pl-10 w-64"
+                    className="pl-10 w-40 md:w-60"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />

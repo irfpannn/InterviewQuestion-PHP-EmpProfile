@@ -496,7 +496,7 @@ const EmployeeList: React.FC = () => {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-4">
             <div className="text-sm text-gray-700">
               Showing page {currentPage} of {totalPages}
             </div>
